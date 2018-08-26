@@ -1,0 +1,5 @@
+{
+    "require": {
+        "jcupitt/vips": "^1.0"
+    }
+}
