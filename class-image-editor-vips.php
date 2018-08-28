@@ -187,7 +187,7 @@ class Image_Editor_Vips extends \WP_Image_Editor {
         error_log('$dst_x ' . $dst_x);
         error_log('$dst_y ' . $dst_y);
 
-        $resized = $this->image->resize(max($dst_h/$src_h, $dst_w/$src_w))->crop($dst_x, $dst_y, $dst_w, $dst_h);
+        $resized = $this->image->crop($src_x, $src_y, $src_w, $src_h)->resize(max($dst_h/$src_h, $dst_w/$src_w));
 
         //if ( is_resource( $resized ) ) {
             $this->update_size( $dst_w, $dst_h );
@@ -278,24 +278,20 @@ class Image_Editor_Vips extends \WP_Image_Editor {
         if ( ! $dst_h )
             $dst_h = $src_h;
 
-        $dst = wp_imagecreatetruecolor( $dst_w, $dst_h );
-
         if ( $src_abs ) {
             $src_w -= $src_x;
             $src_h -= $src_y;
         }
 
-        if ( function_exists( 'imageantialias' ) )
-            imageantialias( $dst, true );
+        $this->image = $this->image->crop($src_x, $src_y, $src_w, $src_h);
 
-        imagecopyresampled( $dst, $this->image, 0, 0, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h );
+        //imagecopyresampled( $dst, $this->image, 0, 0, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h );
 
-        if ( is_resource( $dst ) ) {
-            imagedestroy( $this->image );
-            $this->image = $dst;
+        //if ( is_resource( $dst ) ) {
+            //imagedestroy( $this->image );
             $this->update_size();
             return true;
-        }
+        //}
 
         return new WP_Error( 'image_crop_error', __('Image crop failed.'), $this->file );
     }
