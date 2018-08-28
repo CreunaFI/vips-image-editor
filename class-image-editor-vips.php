@@ -52,17 +52,14 @@ class Image_Editor_Vips extends \WP_Image_Editor {
      * @param string $mime_type
      * @return bool
      */
-    public static function supports_mime_type( $mime_type ) {
-        $image_types = imagetypes();
-        switch( $mime_type ) {
+    public static function supports_mime_type($mime_type)
+    {
+        switch ($mime_type) {
             case 'image/jpeg':
-                return ($image_types & IMG_JPG) != 0;
+                return true;
             case 'image/png':
-                return ($image_types & IMG_PNG) != 0;
-            case 'image/gif':
-                return ($image_types & IMG_GIF) != 0;
+                return true;
         }
-
         return false;
     }
 
