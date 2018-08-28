@@ -104,7 +104,7 @@ class Image_Editor_Vips extends \WP_Image_Editor {
         $this->update_size( $this->image->width, $this->image->height );
 
         $file_info = new finfo(FILEINFO_MIME_TYPE);
-        $mime_type = $file_info->buffer(file_get_contents($image_file));
+        $mime_type = $file_info->buffer($image_file);
         $this->mime_type = $mime_type;
 
         return $this->set_quality();
