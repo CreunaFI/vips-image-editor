@@ -244,9 +244,6 @@ class Image_Editor_Vips extends \WP_Image_Editor {
 
             if ( ! is_wp_error( $image ) && ! $duplicate ) {
                 $resized = $this->_save( $image );
-
-                imagedestroy( $image );
-
                 if ( ! is_wp_error( $resized ) && $resized ) {
                     unset( $resized['path'] );
                     $metadata[$size] = $resized;
