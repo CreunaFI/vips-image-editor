@@ -380,7 +380,13 @@ class Image_Editor_Vips extends \WP_Image_Editor {
         if ( ! $filename )
             $filename = $this->generate_filename( null, null, $extension );
 
-        $image->writeToFile($filename, ['Q' => $this->get_quality()]);
+        $parameters = [];
+
+        if ($mime_type === 'image/jpeg') {
+            $parameters = ['Q' => $this->get_quality()];
+        }
+
+        $image->writeToFile($filename, $parameters);
 
         /*if ( 'image/gif' == $mime_type ) {
             if ( ! $this->make_image( $filename, 'imagegif', array( $image, $filename ) ) )
