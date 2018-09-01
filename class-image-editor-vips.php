@@ -10,12 +10,12 @@ class Image_Editor_Vips extends \WP_Image_Editor {
      */
     protected $image;
 
-    public function __destruct() {
+    /*public function __destruct() {
         if ( $this->image ) {
             // we don't need the original in memory anymore
             imagedestroy( $this->image );
         }
-    }
+    }*/
 
     /**
      * Checks to see if current environment supports GD.
@@ -437,20 +437,23 @@ class Image_Editor_Vips extends \WP_Image_Editor {
      * @param string $mime_type The mime type of the image.
      * @return bool True on success, false on failure.
      */
-    public function stream( $mime_type = null ) {
-        list( $filename, $extension, $mime_type ) = $this->get_output_format( null, $mime_type );
+    public function stream($mime_type = null)
+    {
+        list($filename, $extension, $mime_type) = $this->get_output_format(null, $mime_type);
 
-        switch ( $mime_type ) {
+        switch ($mime_type) {
             case 'image/png':
-                header( 'Content-Type: image/png' );
-                return imagepng( $this->image );
-            case 'image/gif':
-                header( 'Content-Type: image/gif' );
-                return imagegif( $this->image );
-            default:
-                header( 'Content-Type: image/jpeg' );
-                return imagejpeg( $this->image, null, $this->get_quality() );
+                header('Content-Type: image/png');
+                echo $this->image->writeToBuffer('.png');
+                return true;
+            case 'image/jpeg':
+                header('Content-Type: image/jpeg');
+                echo $this->image->writeToBuffer('.jpg', [
+                    'Q' => $this->get_quality()
+                ]);
+                return true;
         }
+        return false;
     }
 
     /**
