@@ -1,6 +1,6 @@
 # VIPS Image Editor
 
-Power WordPress image operations with [VIPS](https://jcupitt.github.io/libvips/).
+High performance WordPress image processing with [VIPS](https://jcupitt.github.io/libvips/).
 
 ## Requirements
 
