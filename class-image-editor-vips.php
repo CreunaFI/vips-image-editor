@@ -105,7 +105,7 @@ class Image_Editor_Vips extends \WP_Image_Editor
 
     /**
      * Resizes current image.
-     * Wraps _resize, since _resize returns a GD Resource.
+     * Wraps _resize, since _resize returns a VIPS Resource.
      *
      * At minimum, either a height or width must be provided.
      * If one of the two is set to null, the resize will
