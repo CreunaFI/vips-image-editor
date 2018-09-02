@@ -1,4 +1,14 @@
 {
+    "name": "joppuyo/vips-image-editor",
+    "description": "High performance WordPress image processing with VIPS",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Johannes Siipola",
+            "email": "johannes@siipo.la"
+        }
+    ],
     "require": {
         "jcupitt/vips": "^1.0"
     }
