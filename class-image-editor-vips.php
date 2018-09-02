@@ -302,21 +302,25 @@ class Image_Editor_Vips extends \WP_Image_Editor {
      * @param float $angle
      * @return true|WP_Error
      */
-    public function rotate( $angle ) {
-        if ( function_exists('imagerotate') ) {
-            $transparency = imagecolorallocatealpha( $this->image, 255, 255, 255, 127 );
-            $rotated = imagerotate( $this->image, $angle, $transparency );
-
-            if ( is_resource( $rotated ) ) {
-                imagealphablending( $rotated, true );
-                imagesavealpha( $rotated, true );
-                imagedestroy( $this->image );
-                $this->image = $rotated;
-                $this->update_size();
-                return true;
+    public function rotate($angle)
+    {
+        try {
+            // Angle is counter clockwise because WordPress is strange
+            $angle = -$angle;
+            // Modulo magic
+            $angle = (360 + ($angle % 360)) % 360;
+            if ($angle === 90) {
+                $this->image = $this->image->rot90();
+            } else if ($angle === 180) {
+                $this->image = $this->image->rot180();
+            } else if ($angle === 270) {
+                $this->image = $this->image->rot270();
             }
+            $this->update_size();
+            return true;
+        } catch (Exception $exception) {
+            return new WP_Error('image_rotate_error', __('Image rotate failed.'), $exception);
         }
-        return new WP_Error( 'image_rotate_error', __('Image rotate failed.'), $this->file );
     }
 
     /**
