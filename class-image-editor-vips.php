@@ -338,8 +338,9 @@ class Image_Editor_Vips extends \WP_Image_Editor
     {
         list($filename, $extension, $mime_type) = $this->get_output_format($filename, $mime_type);
 
-        if (!$filename)
+        if (!$filename) {
             $filename = $this->generate_filename(null, null, $extension);
+        }
 
         $parameters = [];
 
