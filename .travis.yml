@@ -1,6 +1,10 @@
 language: php
 php:
   - '7.0.0'
+before_script:
+  - apt install libvips-dev
+  - pecl install vips
+  - echo "extension=vips.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 script:
   - composer install
   - zip -r vips-image-editor.zip . -x \*.git\*
