@@ -2,7 +2,7 @@
 
 /*
 Plugin Name: Vips image editor
-Plugin URI: https://github.com/joppuyo/wp-vips-image-editor
+Plugin URI: https://github.com/CreunaFI/vips-image-editor
 Description: Power WordPress image operations with Vips
 Version: 1.0.0
 Author: Johannes Siipola
