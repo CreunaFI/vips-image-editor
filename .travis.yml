@@ -1,0 +1,13 @@
+language: php
+php:
+  - '7.0.0'
+script:
+  - composer install
+  - zip -r vips-image-editor.zip . -x \*.git\*
+deploy:
+  provider: releases
+  api_key: '$GITHUB_API_KEY'
+  file: "vips-image-editor.zip"
+  skip_cleanup: true
+  on:
+    tags: true
