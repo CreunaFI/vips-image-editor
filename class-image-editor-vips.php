@@ -128,7 +128,7 @@ class Image_Editor_Vips extends \WP_Image_Editor
             $this->image = $resized;
             return true;
         } catch (Exception $exception) {
-            return new WP_Error('failed_to_crop', __('Failed to crop image'));
+            return new WP_Error('failed_to_crop', __('Failed to crop image'), $exception);
         }
     }
 
@@ -249,7 +249,7 @@ class Image_Editor_Vips extends \WP_Image_Editor
             $this->update_size();
             return true;
         } catch (Exception $exception) {
-            return new WP_Error('image_crop_error', __('Image crop failed.'), $this->file);
+            return new WP_Error('image_crop_error', __('Image crop failed.'), $exception);
         }
     }
 
