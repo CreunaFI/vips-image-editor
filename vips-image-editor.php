@@ -16,7 +16,10 @@ if (!defined('ABSPATH')) {
     exit();
 }
 
-include 'vendor/autoload.php';
+// Check if we are using local Composer
+if (file_exists(__DIR__ . '/vendor')) {
+    require 'vendor/autoload.php';
+}
 include 'class-image-editor-vips.php';
 
 add_action('admin_notices', function() {
