@@ -3,7 +3,7 @@ php:
   - '7.0.0'
 before_script:
   - sudo apt-get install libvips-dev
-  - pecl install vips
+  - yes | pecl install vips
   - echo "extension=vips.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 script:
   - composer install
