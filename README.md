@@ -1,7 +1,5 @@
 # VIPS Image Editor
 
-**Work in progress! Please don't use this plugin yet.**
-
 Power WordPress image operations with VIPS
 
 ## Requirements
