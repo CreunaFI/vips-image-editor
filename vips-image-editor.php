@@ -1,9 +1,9 @@
 <?php
 
 /*
-Plugin Name: Vips image editor
+Plugin Name: VIPS image editor
 Plugin URI: https://github.com/CreunaFI/vips-image-editor
-Description: Power WordPress image operations with Vips
+Description: Power WordPress image operations with VIPS
 Version: 1.0.0
 Author: Johannes Siipola
 Author URI: https://siipo.la
