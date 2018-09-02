@@ -4,7 +4,7 @@
 Plugin Name: VIPS image editor
 Plugin URI: https://github.com/CreunaFI/vips-image-editor
 Description: High performance WordPress image processing with VIPS
-Version: 1.0.1
+Version: 1.0.2
 Author: Johannes Siipola
 Author URI: https://siipo.la
 License: GPLv2 or later

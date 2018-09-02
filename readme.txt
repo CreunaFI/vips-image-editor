@@ -12,6 +12,9 @@ High performance WordPress image processing with VIPS
 
 == Changelog ==
 
+= 1.0.2 =
+* Add package name to composer.json
+
 = 1.0.1 =
 * Add WordPress readme.txt
 
