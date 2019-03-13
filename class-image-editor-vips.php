@@ -10,6 +10,7 @@ class Image_Editor_Vips extends \WP_Image_Editor
      * @var resource
      */
     protected $image;
+    protected $debug = false;
 
     /**
      * Checks to see if current environment supports VIPS.
@@ -24,6 +25,12 @@ class Image_Editor_Vips extends \WP_Image_Editor
     public static function test($args = [])
     {
         return true;
+    }
+
+    private function debug($message) {
+        if ($this->debug) {
+            error_log($message);
+        }
     }
 
     /**
@@ -148,7 +155,17 @@ class Image_Editor_Vips extends \WP_Image_Editor
         list($dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h) = $dims;
 
         try {
-            $resized = $this->image->crop($src_x, $src_y, $src_w, $src_h)->resize(max($dst_h / $src_h, $dst_w / $src_w));
+            if (!$crop && version_compare(vips_version(), '8.5.0', '>=')) {
+                // Vips thumbnail() is faster than resizing, let's use it if it's available
+                // TODO: also use thumbnail() when crop is enabled
+                $temporary_buffer = $this->image->writeToBuffer('.jpg', ['Q' => 100]);
+                $resized = Jcupitt\Vips\Image::thumbnail_buffer($temporary_buffer, $dst_w);
+                $this->debug('resized using thumbnail');
+            } else {
+                $resized = $this->image->crop($src_x, $src_y, $src_w, $src_h);
+                $resized = $resized->resize(max($dst_h / $src_h, $dst_w / $src_w));
+                $this->debug('resized using resize');
+            }
             $this->update_size($dst_w, $dst_h);
             return $resized;
         } catch (Exception $exception) {
