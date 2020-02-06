@@ -366,6 +366,13 @@ class Image_Editor_Vips extends \WP_Image_Editor
         }
 
         try {
+
+            // Check directory, vips does not create folders for us
+            $directory = dirname($filename);
+            if (!is_dir($directory)) {
+                mkdir($directory);
+            }
+
             $image->writeToFile($filename, $parameters);
             // Set correct file permissions
             $stat = stat(dirname($filename));
