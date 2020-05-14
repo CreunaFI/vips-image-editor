@@ -372,6 +372,10 @@ class Image_Editor_Vips extends \WP_Image_Editor
             if (!is_dir($directory)) {
                 mkdir($directory);
             }
+            
+            if (is_wp_error($image)) {
+                throw new Exception('Image is a WP_Error');
+            }
 
             $image->writeToFile($filename, $parameters);
             // Set correct file permissions
