@@ -391,10 +391,17 @@ class Image_Editor_Vips extends \WP_Image_Editor
         if ($mime_type === 'image/jpeg') {
 
             $interlace = apply_filters('vips_ie_interlace', false);
+            $optimize_coding = apply_filters('vips_ie_optimize_coding', false);
+            $trellis_quant = apply_filters('vips_ie_trellis_quant', false);
+            $overshoot_deringing = apply_filters('vips_ie_overshoot_deringing', false);
+            $optimize_scans = apply_filters('vips_ie_optimize_scans', false);
 
             $parameters = [
                 'Q' => $this->get_quality(),
                 'interlace' => $interlace,
+                'trellis_quant' => $trellis_quant,
+                'overshoot_deringing' => $overshoot_deringing,
+                'optimize_scans' => $optimize_scans,
             ];
         }
 
