@@ -36,5 +36,5 @@ add_filter('wp_image_editors', function($image_editors) {
         array_unshift($image_editors, 'Image_Editor_Vips');
     }
     return $image_editors;
-}, 9999);
+}, 20);
 
