@@ -171,17 +171,9 @@ class Image_Editor_Vips extends \WP_Image_Editor
                 $target_w = ceil($dst_w * $scale);
                 $target_h = ceil($dst_h * $scale);
 
-                if (apply_filters('vips_ie_thumbnail_file', false) !== true) {
-                    $resized = $this->image->thumbnail_image($target_w, [
-                        'height' => $target_h,
-                    ]);
-                } else {
-                    // Super fast?
-                    // Doesn't work with image editor, use only if not flip/rotation/crop has been performed
-                    $resized = Jcupitt\Vips\Image::thumbnail($this->file, $target_w, [
-                        'height' => $target_h,
-                    ]);
-                }
+                $resized = $this->image->thumbnail_image($target_w, [
+                    'height' => $target_h,
+                ]);
             } else {
                 $resized = $this->image->resize(max($dst_h / $src_h, $dst_w / $src_w));
             }
