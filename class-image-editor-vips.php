@@ -12,6 +12,15 @@ class Image_Editor_Vips extends \WP_Image_Editor
     protected $image;
     protected $debug = false;
 
+
+    public function __construct($file)
+    {
+        parent::__construct($file);
+        if (apply_filters('vips_ie_enable_cache', true) === false) {
+            Jcupitt\Vips\Config::cacheSetMax(0);
+        }
+    }
+
     /**
      * Checks to see if current environment supports VIPS.
      *
@@ -27,9 +36,9 @@ class Image_Editor_Vips extends \WP_Image_Editor
         return true;
     }
 
-    private function debug($message) {
-        if ($this->debug) {
-            error_log($message);
+    private static function debug(...$messages) {
+        if (defined('WP_DEBUG') && WP_DEBUG === true) {
+            error_log(print_r($messages, true));
         }
     }
 
@@ -66,7 +75,7 @@ class Image_Editor_Vips extends \WP_Image_Editor
         if ($this->image)
             return true;
 
-        if (!is_file($this->file) && !preg_match('|^https?://|', $this->file)) {
+        if (!is_file($this->file)) {
             return new WP_Error('error_loading_image', __('File doesn&#8217;t exist?'), $this->file);
         }
 
@@ -74,13 +83,9 @@ class Image_Editor_Vips extends \WP_Image_Editor
         wp_raise_memory_limit('image');
 
         try {
-            $image_file = file_get_contents($this->file);
-            $this->image = Jcupitt\Vips\Image::newFromBuffer($image_file);
+            $this->image = Jcupitt\Vips\Image::newFromFile($this->file);
             $this->update_size($this->image->width, $this->image->height);
-
-            $file_info = new finfo(FILEINFO_MIME_TYPE);
-            $mime_type = $file_info->buffer($image_file);
-            $this->mime_type = $mime_type;
+            $this->mime_type = mime_content_type($this->file);
 
             return $this->set_quality();
         } catch (Exception $exception) {
@@ -155,19 +160,41 @@ class Image_Editor_Vips extends \WP_Image_Editor
         list($dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h) = $dims;
 
         try {
-            if (!$crop && version_compare(vips_version(), '8.5.0', '>=')) {
+
+            $resized = null;
+
+            if (version_compare(vips_version(), '8.6.0', '>=') && apply_filters('vips_ie_thumbnail', true) === true) {
                 // Vips thumbnail() is faster than resizing, let's use it if it's available
-                // TODO: also use thumbnail() when crop is enabled
-                $temporary_buffer = $this->image->writeToBuffer('.jpg', ['Q' => 100]);
-                $resized = Jcupitt\Vips\Image::thumbnail_buffer($temporary_buffer, $dst_w);
-                $this->debug('resized using thumbnail');
+
+                $scale = max($this->size['width'] / $src_w, $this->size['height'] / $src_h);
+
+                $target_w = ceil($dst_w * $scale);
+                $target_h = ceil($dst_h * $scale);
+
+                if (apply_filters('vips_ie_thumbnail_file', false) !== true) {
+                    $resized = $this->image->thumbnail_image($target_w, [
+                        'height' => $target_h,
+                    ]);
+                } else {
+                    // Super fast?
+                    // Doesn't work with image editor, use only if not flip/rotation/crop has been performed
+                    $resized = Jcupitt\Vips\Image::thumbnail($this->file, $target_w, [
+                        'height' => $target_h,
+                    ]);
+                }
             } else {
-                $resized = $this->image->crop($src_x, $src_y, $src_w, $src_h);
-                $resized = $resized->resize(max($dst_h / $src_h, $dst_w / $src_w));
-                $this->debug('resized using resize');
+                $resized = $this->image->resize(max($dst_h / $src_h, $dst_w / $src_w));
             }
+
+            $scale = max($dst_w / $src_w, $dst_h / $src_h);
+
+            $dst_x_scaled = floor($src_x * $scale);
+            $dst_y_scaled = floor($src_y * $scale);
+
+            $cropped = $resized->crop($dst_x_scaled, $dst_y_scaled, $dst_w, $dst_h);
+
             $this->update_size($dst_w, $dst_h);
-            return $resized;
+            return $cropped;
         } catch (Exception $exception) {
             return new WP_Error('crop_error', __('Failed to crop image'), $exception);
         }
@@ -362,7 +389,13 @@ class Image_Editor_Vips extends \WP_Image_Editor
         $parameters = [];
 
         if ($mime_type === 'image/jpeg') {
-            $parameters = ['Q' => $this->get_quality()];
+
+            $interlace = apply_filters('vips_ie_interlace', false);
+
+            $parameters = [
+                'Q' => $this->get_quality(),
+                'interlace' => $interlace,
+            ];
         }
 
         try {
@@ -372,7 +405,7 @@ class Image_Editor_Vips extends \WP_Image_Editor
             if (!is_dir($directory)) {
                 mkdir($directory);
             }
-            
+
             if (is_wp_error($image)) {
                 throw new Exception('Image is a WP_Error');
             }
