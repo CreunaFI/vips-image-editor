@@ -12,6 +12,11 @@ High performance WordPress image processing with VIPS
 
 == Changelog ==
 
+= 1.1.0 =
+* Feature: vips thumbnail is used instead of resize if vips version is newer than 8.6.0 for faster resizing
+* Fix: Fixed issue where error was not handled correctly if target size was larger than image size
+* Fix: Disabled vips cache by default since it took up more memory without any performance benefits
+
 = 1.0.3 =
 * Fix Bedrock compatibility
 
