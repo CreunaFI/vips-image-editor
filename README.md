@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.com/CreunaFI/vips-image-editor.svg?branch=master)](https://travis-ci.com/CreunaFI/vips-image-editor) [![Packagist](https://img.shields.io/packagist/v/joppuyo/vips-image-editor.svg)](https://packagist.org/packages/joppuyo/vips-image-editor)
 
-High performance WordPress image processing with [VIPS](https://jcupitt.github.io/libvips/).
+High performance WordPress image processing with [VIPS](https://libvips.github.io/libvips/).
 
 ## Requirements
 
