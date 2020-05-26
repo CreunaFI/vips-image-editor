@@ -16,7 +16,7 @@ class Image_Editor_Vips extends \WP_Image_Editor
     public function __construct($file)
     {
         parent::__construct($file);
-        if (apply_filters('vips_ie_enable_cache', true) === false) {
+        if (apply_filters('vips_ie_enable_cache', false) === false) {
             Jcupitt\Vips\Config::cacheSetMax(0);
         }
     }
